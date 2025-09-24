@@ -39,23 +39,17 @@ struct PhotoGridView: View {
                         ScrollView {
                             LazyVGrid(columns: columns, spacing: spacing) {
                                 ForEach(viewModel.photos) { photo in
-                                    NavigationLink(destination: PhotoDetailView(photo: photo)) {
-                                        AsyncImage(url: URL(string: photo.download_url)) { image in
-                                            image
-                                                .resizable()
-                                                .scaledToFill()
-                                                .frame(width: cellSide, height: cellSide)
-                                                .clipped()
-                                        } placeholder: {
-                                            Color.gray.opacity(0.3)
-                                                .frame(width: cellSide, height: cellSide)
-                                        }
+                                    NavigationLink(destination: PhotoDetailView(loader: viewModel.loader(for: photo))) {
+                                        CachedAsyncImage(loader: viewModel.loader(for: photo))
+                                            .frame(width: cellSide, height: cellSide)
+                                            .clipped()
                                     }
                                 }
                             }
                             .padding(.horizontal, horizontalPadding)
                             .padding(.top, topTitleSpace)
                         }
+
                     }
                 }
                 

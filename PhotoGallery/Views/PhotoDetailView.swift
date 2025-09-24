@@ -8,18 +8,19 @@
 import SwiftUI
 
 struct PhotoDetailView: View {
-    let photo: Photo
-    
+    @ObservedObject var loader: ImageLoader  // shared loader
+
     @State private var scale: CGFloat = 1.0
     @State private var lastScale: CGFloat = 1.0
-    
+
     var body: some View {
         VStack {
-            AsyncImage(url: URL(string: photo.download_url)) { image in
-                image
+            if let image = loader.image {
+                Image(uiImage: image)
                     .resizable()
                     .scaledToFit()
                     .scaleEffect(scale)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .gesture(
                         MagnificationGesture()
                             .onChanged { value in
@@ -31,14 +32,15 @@ struct PhotoDetailView: View {
                                 lastScale = 1.0
                             }
                     )
-            } placeholder: {
+            } else {
                 ProgressView()
                     .scaleEffect(1.5)
                     .foregroundColor(.blue)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            
             Spacer()
+        }
+        .onAppear {
+            loader.load()
         }
         .navigationBarTitleDisplayMode(.inline)
         .background(Color.black.edgesIgnoringSafeArea(.all))
@@ -46,12 +48,7 @@ struct PhotoDetailView: View {
 }
 
 #Preview {
-    PhotoDetailView(photo: Photo(
-            id: "4",
-            author: "Preview Author",
-            width: 120,
-            height: 120,
-            url: "https://picsum.photos/id/1/400/600",
-            download_url: "https://picsum.photos/400/600"
-        ))
+ let url = URL(string: "https://picsum.photos/400/400")
+ let loader = ImageLoader(url: url)
+ PhotoDetailView(loader: loader)
 }

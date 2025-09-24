@@ -12,6 +12,8 @@ class GalleryViewModel: ObservableObject {
     @Published var photos: [Photo] = []
     @Published var isLoading: Bool = false
     @Published var errorMessage: String? = nil
+    
+    private(set) var loaders: [URL: ImageLoader] = [:]
 
     private var cancellables = Set<AnyCancellable>()
     
@@ -33,6 +35,14 @@ class GalleryViewModel: ObservableObject {
             }
             .store(in: &cancellables)
     }
+    
+    func loader(for photo: Photo) -> ImageLoader {
+            let url = URL(string: photo.download_url)!
+            if let existing = loaders[url] { return existing }
+            let newLoader = ImageLoader(url: url)
+            loaders[url] = newLoader
+            return newLoader
+        }
 }
 
 
