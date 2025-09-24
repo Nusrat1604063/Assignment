@@ -1,7 +1,0 @@
-# Xcode build folders
-DerivedData/
-build/
-
-# macOS system file
-.DS_Store
-
