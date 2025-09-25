@@ -10,10 +10,16 @@ import Combine
 
 class NetworkManager {
     static let shared = NetworkManager()
+    var urlString = "https://picsum.photos/v2/list?page=1&limit=50" //loading first 50 images from first page
+    
     private init() {}
     
+    //For testing purpose 
+    init(urlString: String) {
+        self.urlString = urlString
+    }
+    
     func fetchPhotos() -> AnyPublisher<[Photo], Error> {
-        let urlString = "https://picsum.photos/v2/list?page=1&limit=50"  //loading first 50 images from first page
         
         guard let url = URL(string: urlString) else {
             return Fail(error: URLError(.badURL))
