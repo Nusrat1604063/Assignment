@@ -13,6 +13,7 @@ struct PhotoDetailView: View {
     @State private var scale: CGFloat = 1.0
     @State private var lastScale: CGFloat = 1.0
     @State private var showToast = false
+    @State private var showShareSheet = false
 
 
     var body: some View {
@@ -42,12 +43,29 @@ struct PhotoDetailView: View {
                 }
                 Spacer()
             }
+            .sheet(isPresented: $showShareSheet) {
+                if let image = loader.image {
+                    ActivityView(activityItems: [image])
+                }
+            }
             .onAppear {
                 loader.load()
             }
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(trailing: downloadButton)
             .background(Color.black.edgesIgnoringSafeArea(.all))
+            
+            HStack {
+                Spacer()
+                Button(action: { showShareSheet = true }) {
+                    Image(systemName: "square.and.arrow.up")
+                        .font(.title2)
+                        .foregroundColor(.blue)
+                }
+                Spacer()
+            }
+            .frame(maxHeight: .infinity, alignment: .bottom)
+            .padding(.bottom, 16)
             
             if showToast {
                 VStack {
@@ -63,6 +81,7 @@ struct PhotoDetailView: View {
             
         }
     }
+    
     private var downloadButton: some View {
            Button(action: saveImage) {
                Image(systemName: "arrow.down.to.line")
@@ -79,6 +98,14 @@ struct PhotoDetailView: View {
             showToast = false
         }
     }
+}
+
+struct ActivityView: UIViewControllerRepresentable {
+    let activityItems: [Any]
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+    }
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
 #Preview {
