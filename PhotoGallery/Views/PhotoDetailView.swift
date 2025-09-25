@@ -12,38 +12,72 @@ struct PhotoDetailView: View {
 
     @State private var scale: CGFloat = 1.0
     @State private var lastScale: CGFloat = 1.0
+    @State private var showToast = false
+
 
     var body: some View {
-        VStack {
-            if let image = loader.image {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFit()
-                    .scaleEffect(scale)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .gesture(
-                        MagnificationGesture()
-                            .onChanged { value in
-                                let delta = value / lastScale
-                                scale *= delta
-                                lastScale = value
-                            }
-                            .onEnded { _ in
-                                lastScale = 1.0
-                            }
-                    )
-            } else {
-                ProgressView()
-                    .scaleEffect(1.5)
-                    .foregroundColor(.blue)
+        ZStack {
+            VStack {
+                if let image = loader.image {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFit()
+                        .scaleEffect(scale)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .gesture(
+                            MagnificationGesture()
+                                .onChanged { value in
+                                    let delta = value / lastScale
+                                    scale *= delta
+                                    lastScale = value
+                                }
+                                .onEnded { _ in
+                                    lastScale = 1.0
+                                }
+                        )
+                } else {
+                    ProgressView()
+                        .scaleEffect(1.5)
+                        .foregroundColor(.blue)
+                }
+                Spacer()
             }
-            Spacer()
+            .onAppear {
+                loader.load()
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarItems(trailing: downloadButton)
+            .background(Color.black.edgesIgnoringSafeArea(.all))
+            
+            if showToast {
+                VStack {
+                    Text("Photo Saved")
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 10)
+                        .background(Color.black.opacity(0.8))
+                        .foregroundColor(.white)
+                        .cornerRadius(12)
+                        .padding(.top, 40)
+                }
+            }
+            
         }
-        .onAppear {
-            loader.load()
+    }
+    private var downloadButton: some View {
+           Button(action: saveImage) {
+               Image(systemName: "arrow.down.to.line")
+                   .font(.body)
+                   .foregroundColor(.white)
+           }
+       }
+    
+    private func saveImage() {
+        guard let image = loader.image else { return }
+        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+        showToast = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            showToast = false
         }
-        .navigationBarTitleDisplayMode(.inline)
-        .background(Color.black.edgesIgnoringSafeArea(.all))
     }
 }
 
