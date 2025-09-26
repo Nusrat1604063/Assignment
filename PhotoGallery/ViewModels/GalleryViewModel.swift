@@ -48,12 +48,14 @@ class GalleryViewModel: ObservableObject {
     }
     
     func loader(for photo: Photo) -> ImageLoader {
-            let url = URL(string: photo.download_url)!
-            if let existing = loaders[url] { return existing }
-            let newLoader = ImageLoader(url: url)
-            loaders[url] = newLoader
-            return newLoader
-        }
+        let urlString = photo.download_url
+        let url = URL(string: urlString) ?? URL(string: "https://picsum.photos/200/200")! // Fallback URL
+        if let existing = loaders[url] { return existing }
+        let newLoader = ImageLoader(url: url)
+        newLoader.load() // Preload image
+        loaders[url] = newLoader
+        return newLoader
+    }
 }
 
 

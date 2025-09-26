@@ -25,10 +25,11 @@ class ImageLoader: ObservableObject {
         guard let url = url else { return }
 
         if let cached = Self.cache.object(forKey: url as NSURL) {  //if image already exists
+            print("Cache hit for \(url)")
             self.image = cached
             return
         }
-
+        
         cancellable = URLSession.shared.dataTaskPublisher(for: url)
             .map { UIImage(data: $0.data) }
             .replaceError(with: nil)

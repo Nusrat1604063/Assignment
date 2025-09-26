@@ -21,7 +21,7 @@ struct CachedAsyncImage: View {
                 placeholder
             }
         }
-        .onAppear { loader.load() }
+        .onAppear { if loader.image == nil { loader.load() } }
         .onDisappear { loader.cancel() }
     }
 }

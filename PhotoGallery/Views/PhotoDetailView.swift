@@ -48,9 +48,6 @@ struct PhotoDetailView: View {
                     ActivityView(activityItems: [image], showShareSheet: $showShareSheet)
                 }
             }
-            .onAppear {
-                loader.load()
-            }
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(trailing: downloadButton)
             .background(Color.black.edgesIgnoringSafeArea(.all))
