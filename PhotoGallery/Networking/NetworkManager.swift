@@ -10,9 +10,20 @@ import Combine
 
 class NetworkManager {
     static let shared = NetworkManager()
-    var urlString = "https://picsum.photos/v2/list?page=1&limit=50" //loading first 50 images from first page
+    var urlString: String //loading first 50 images from first page
     
-    private init() {}
+    private init() {
+        #if DEBUG
+        urlString = "https://picsum.photos/v2/list?page=1&limit=50" // Dev
+        print("DEBUG URL is used")
+        #elseif QA
+        urlString = "https://picsum.photos/v2/list?page=1&limit=100" // QA
+        print("QA URL is used")
+        #elseif PRODUCTION
+        urlString = "https://picsum.photos/v2/list?page=1&limit=100" // Production
+        print("Production URL is used")
+        #endif
+    }
     
     //For testing purpose 
     init(urlString: String) {

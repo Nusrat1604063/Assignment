@@ -52,22 +52,33 @@ final class GalleryViewModelTest: XCTestCase {
         mockNetworkManager.photos = [
             Photo(id: "1", author: "Test", width: 100, height: 100, url: "https://example.com", download_url: "https://example.com/1.jpg")
         ]
+        
+        let expectation = XCTestExpectation(description: "Photos fetched")
         viewModel.fetchPhotos()
         
-        XCTAssertTrue(viewModel.isLoading, "isLoading is true while fetching")
-        XCTAssertEqual(viewModel.photos.count, 1, "Should load one photo")
-        XCTAssertEqual(viewModel.photos.first?.id, "1", "Photo ID should match")
-        XCTAssertNil(viewModel.errorMessage, "Error message should be nil")
+        DispatchQueue.main.async {
+            XCTAssertTrue(self.viewModel.isLoading, "isLoading is true while fetching")
+            XCTAssertEqual(self.viewModel.photos.count, 1, "Should load one photo")
+            XCTAssertEqual(self.viewModel.photos.first?.id, "1", "Photo ID should match")
+            XCTAssertNil(self.viewModel.errorMessage, "Error message should be nil")
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 3.0)
     }
     
     func test_FetchPhotosWithInvalidURL_ReturnsBadURLError() {
         mockNetworkManager.error = URLError(.badURL)
         
+        let expectation = XCTestExpectation(description: "Error received")
         viewModel.fetchPhotos()
         
-        XCTAssertTrue(viewModel.isLoading, "isLoading is true while fetching")
-        XCTAssertTrue(viewModel.photos.isEmpty, "Photo is empty on error")
-        XCTAssertEqual(viewModel.errorMessage, URLError(.badURL).localizedDescription, "Error message is bad URL error")
+        DispatchQueue.main.async {
+            XCTAssertTrue(self.viewModel.isLoading, "isLoading is true while fetching")
+            XCTAssertTrue(self.viewModel.photos.isEmpty, "Photo is empty on error")
+            XCTAssertEqual(self.viewModel.errorMessage, URLError(.badURL).localizedDescription, "Error message is bad URL error")
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 3.0)
     }
     
     func test_LoaderForPhoto_ReturnsCachedInstance() {
