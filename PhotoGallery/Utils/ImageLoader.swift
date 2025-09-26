@@ -44,4 +44,9 @@ class ImageLoader: ObservableObject {
     func cancel() {
         cancellable?.cancel()
     }
+    
+    // For testing purpose
+    func getURL() -> URL? {
+        return url
+    }
 }

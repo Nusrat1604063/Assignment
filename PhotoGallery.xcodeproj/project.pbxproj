@@ -25,6 +25,7 @@
 		6917F0D82E8538E300DD8D6F /* Exceptions for "PhotoGallery" folder in "PhotoGalleryTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Tests/GalleryViewModelTest.swift,
 				Tests/NetworkManagerTests.swift,
 			);
 			target = 6917F0CB2E85375A00DD8D6F /* PhotoGalleryTests */;
@@ -32,6 +33,7 @@
 		6917F0D92E853A2400DD8D6F /* Exceptions for "PhotoGallery" folder in "PhotoGallery" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Tests/GalleryViewModelTest.swift,
 				Tests/NetworkManagerTests.swift,
 			);
 			target = 69B712942E82E16600FAF5FE /* PhotoGallery */;

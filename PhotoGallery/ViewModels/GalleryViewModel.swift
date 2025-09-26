@@ -16,11 +16,22 @@ class GalleryViewModel: ObservableObject {
     private(set) var loaders: [URL: ImageLoader] = [:]
 
     private var cancellables = Set<AnyCancellable>()
+    private let networkManager: NetworkManager
+    
+    // Use singleton for production
+    init() {
+        self.networkManager = .shared
+    }
+    
+    // For testing purpose
+    init(networkManager: NetworkManager) {
+        self.networkManager = networkManager
+    }
     
     func fetchPhotos() {
         isLoading = true
         
-        NetworkManager.shared.fetchPhotos()
+        networkManager.fetchPhotos()
             .sink { [weak self] completion in
                 self?.isLoading = false
                 switch completion {
