@@ -8,6 +8,7 @@ A simple iOS application built with SwiftUI that displays a photo gallery from t
 - Image caching using `NSCache` for improved performance.
 - Save photos to the device's gallery in JPEG format.
 - Share photos via the system share sheet.
+- Multiple build configurations (Debug, QA, Production) with separate API URLs
 - Unit tests for `GalleryViewModel` and `NetworkManager` to ensure reliability.
 
 ## Requirements
@@ -16,7 +17,13 @@ A simple iOS application built with SwiftUI that displays a photo gallery from t
 - Swift 5.0+
 
 ## Setup Instructions
-1. Clone the Repository:
+1. Clone the repository:
    ```bash
    git clone https://github.com/Nusrat1604063/Assignment.git
 
+2. Open the project in Xcode:
+   cd Assignment
+   open PhotoGallery.xcodeproj
+  
+3. Select a build configuration (Debug, QA, or Production) from the scheme dropdown in Xcode. 
+4. Run the app on the simulator or a connected device. 
