@@ -45,7 +45,7 @@ struct PhotoDetailView: View {
             }
             .sheet(isPresented: $showShareSheet) {
                 if let image = loader.image {
-                    ActivityView(activityItems: [image])
+                    ActivityView(activityItems: [image], showShareSheet: $showShareSheet)
                 }
             }
             .onAppear {
@@ -102,8 +102,12 @@ struct PhotoDetailView: View {
 
 struct ActivityView: UIViewControllerRepresentable {
     let activityItems: [Any]
+    @Binding var showShareSheet: Bool
+    
     func makeUIViewController(context: Context) -> UIActivityViewController {
-        UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+        let controller = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+        controller.completionWithItemsHandler = { _, _, _, _ in showShareSheet = false }
+        return controller
     }
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
